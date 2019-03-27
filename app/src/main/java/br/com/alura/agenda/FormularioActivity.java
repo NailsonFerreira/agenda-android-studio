@@ -21,6 +21,7 @@ public class FormularioActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario);
+
         helper = new FormularioHelper(this);
     }
 
@@ -37,8 +38,8 @@ public class FormularioActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_formulario_ok:
-            Toast.makeText(FormularioActivity.this, "Aluno salvo com sucesso!", Toast.LENGTH_SHORT).show();
             Aluno aluno = helper.pegaAluno();
+            Toast.makeText(FormularioActivity.this, "Aluno " + aluno.getNome() +  " salvo", Toast.LENGTH_SHORT).show();
 
             finish();
             break;
