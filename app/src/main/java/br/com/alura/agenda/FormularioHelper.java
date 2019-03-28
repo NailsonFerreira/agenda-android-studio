@@ -24,7 +24,7 @@ public class FormularioHelper {
     }
 
     public Aluno pegaAluno() {
-        Aluno aluno = new Aluno ();
+        //Aluno aluno = new Aluno ();
         aluno.setNome(campoNome.getText().toString());
         aluno.setEndereco(campoEndereco.getText().toString());
         aluno.setTelefone(campoTelefone.getText().toString());

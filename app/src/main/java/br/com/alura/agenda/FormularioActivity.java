@@ -26,10 +26,12 @@ public class FormularioActivity extends AppCompatActivity {
         helper = new FormularioHelper(this);
 
         Intent intent = getIntent();
-        Aluno aluno = (Aluno)  intent.getSerializableExtra("aluno");
-        if (aluno !=null) {
+        Aluno aluno = (Aluno) intent.getSerializableExtra("aluno");
+
+        if(aluno != null){
             helper.preencheFormulario(aluno);
         }
+
     }
 
     @Override
@@ -47,8 +49,15 @@ public class FormularioActivity extends AppCompatActivity {
             case R.id.menu_formulario_ok:
             Aluno aluno = helper.pegaAluno();
             AlunoDAO dao = new AlunoDAO(this);
-            dao.insere(aluno);
-            dao.close();
+
+
+                if (aluno.getId() != null)  {
+                    dao.altera(aluno);
+                } else {
+                    dao.insere(aluno);
+                }
+
+                dao.close();
 
             Toast.makeText(FormularioActivity.this, "Aluno " + aluno.getNome() +  " salvo", Toast.LENGTH_SHORT).show();
 
