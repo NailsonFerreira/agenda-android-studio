@@ -68,11 +68,23 @@ public class ListaAlunosActivity extends AppCompatActivity {
         carregaLista();
     }
 
+    //menus de clique longo
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
-
+        //abre menu de opcoes no item selecionado
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        //objeto aluno recebe um final pois sendo uma variavel causaria conflito no mesmo objeto aluno em dao.deletar(aluno)
         final Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
+
+        MenuItem itemSMS = menu.add("Enviar SMS");
+        Intent intentSMS = new Intent(Intent.ACTION_VIEW);
+        intentSMS.setData(Uri.parse("sms:" + aluno.getTelefone()));
+        itemSMS.setIntent(intentSMS);
+
+        MenuItem itemMapa = menu.add("Ver no Mapa");
+        Intent intentMapa = new Intent(Intent.ACTION_VIEW);
+        intentMapa.setData(Uri.parse("geo:0,0?q=" + aluno.getEndereco()));
+        itemMapa.setIntent(intentMapa);
 
         final MenuItem itemSite = menu.add("Visitar Site");
         Intent intentSite = new Intent(Intent.ACTION_VIEW);
