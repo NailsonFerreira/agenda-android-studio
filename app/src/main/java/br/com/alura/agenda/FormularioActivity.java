@@ -15,12 +15,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.net.URI;
 
 import br.com.alura.agenda.dao.AlunoDAO;
 import br.com.alura.agenda.modelo.Aluno;
@@ -65,11 +63,7 @@ public class FormularioActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(resultCode == Activity.RESULT_OK) {
             if (requestCode == CODIGO_CAMERA) {
-                ImageView foto = (ImageView) findViewById(R.id.fornulario_foto);
-                Bitmap bitmap = BitmapFactory.decodeFile(caminhoFoto);
-                Bitmap bitmapReduzido = Bitmap.createScaledBitmap(bitmap, 300, 300, true);
-                foto.setImageBitmap(bitmapReduzido);
-                foto.setScaleType(ImageView.ScaleType.FIT_XY);
+                helper.carregaImagem(caminhoFoto);
             }
         }
     }
