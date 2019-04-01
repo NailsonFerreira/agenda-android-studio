@@ -71,14 +71,18 @@ public class ListaAlunosActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
-            
+
             case R.id.menu_enviar_notas:
                 AlunoDAO dao = new AlunoDAO(this);
                 List<Aluno> alunos = dao.buscaAlunos();
                 dao.close();
                 AlunoConverter conversor = new AlunoConverter();
-
                 String json = conversor.converteParaJSON(alunos);
+
+                WebClient client = new WebClient();
+                String resposta = client.post(json);
+
+
                 Toast.makeText(this, json, Toast.LENGTH_LONG).show();
             break;
         }
