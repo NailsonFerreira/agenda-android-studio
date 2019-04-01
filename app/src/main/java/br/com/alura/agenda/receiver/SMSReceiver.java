@@ -20,7 +20,7 @@ public class SMSReceiver extends BroadcastReceiver{
         byte[] pdu = (byte[]) pdus[0];
         String formato = (String) intent.getSerializableExtra("format");
 
-        SmsMessage sms; //Revisar. codigo original dando erro!
+        SmsMessage sms; //Revisar. codigo original dando erro Modulo 2, Aula 4x2!
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             sms = SmsMessage.createFromPdu(pdu, formato);
         } else {

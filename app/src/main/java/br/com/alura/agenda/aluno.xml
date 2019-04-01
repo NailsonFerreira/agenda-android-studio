@@ -1,0 +1,10 @@
+<alunos>
+    <aluno>
+        <id></id>
+        <nome>Daniel</nome>
+        <endereco>Rua Vergueiro</endereco>
+        <telefone>11112222</telefone>
+        <site>www.alura.com.br</site>
+        <nota>4.5</nota>
+    </aluno>
+</alunos>
