@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FormularioActivity"></activity>
+        <activity android:name=".FormularioActivity" />
 
         <receiver android:name=".receiver.SMSReceiver">
             <intent-filter>
@@ -38,7 +38,8 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".ProvasActivity"></activity>
+        <activity android:name=".ProvasActivity" />
+        <activity android:name=".DetalhesProvaActivity"></activity>
     </application>
 
 </manifest>
