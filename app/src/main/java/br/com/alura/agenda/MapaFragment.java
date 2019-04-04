@@ -53,6 +53,7 @@ public class MapaFragment extends SupportMapFragment implements OnMapReadyCallba
             }
         }
         alunoDAO.close();
+        new Localizador(getContext(), googleMap);
 
     }
 
