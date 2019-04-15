@@ -1,5 +1,7 @@
 package br.com.alura.agenda;
 
+import android.support.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
@@ -10,12 +12,22 @@ import java.util.Scanner;
 public class WebClient {
 
     public String post(String json){
-        URL url = null;
+            String endereco = "https://www.caelum.com.br/mobile";
+        return realizaConexao(json, endereco);
+    }
+
+    public void insere(String json) {
+        String endereco = "http://192.168.1.20:8080/api/aluno";
+        realizaConexao(json, endereco);
+    }
+
+    @Nullable
+    private String realizaConexao(String json, String endereco) {
         try {
-            url = new URL("https://www.caelum.com.br/mobile");
+            URL url = new URL(endereco);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestProperty("Content-type", "aplication/json");
-            connection.setRequestProperty("Accept", "aplication/json");
+            connection.setRequestProperty("Content-type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
 
             connection.setDoOutput(true);
 
@@ -26,7 +38,6 @@ public class WebClient {
 
             Scanner scanner = new Scanner(connection.getInputStream());
             String resposta = scanner.next();
-
             return resposta;
 
         } catch (MalformedURLException e) {
@@ -36,4 +47,6 @@ public class WebClient {
         }
         return null;
     }
+
+
 }
