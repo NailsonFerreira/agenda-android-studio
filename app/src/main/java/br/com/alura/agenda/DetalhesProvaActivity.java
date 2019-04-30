@@ -19,9 +19,9 @@ public class DetalhesProvaActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Prova prova = (Prova) intent.getSerializableExtra("prova");
-        TextView materia = (TextView) findViewById(R.id.detalhes_prova_materia);
-        TextView data = (TextView) findViewById(R.id.detalhes_prova_data);
-        ListView listaTopicos = (ListView) findViewById(R.id.detalhes_prova_topicos);
+        TextView materia = findViewById(R.id.detalhes_prova_materia);
+        TextView data = findViewById(R.id.detalhes_prova_data);
+        ListView listaTopicos = findViewById(R.id.detalhes_prova_topicos);
 
         materia.setText(prova.getMateria());
         data.setText(prova.getData());

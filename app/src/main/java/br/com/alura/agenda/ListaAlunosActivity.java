@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -92,6 +93,10 @@ public class ListaAlunosActivity extends AppCompatActivity {
         List<Aluno> alunos = dao.buscaAlunos();
         dao.close();
 
+        for(Aluno aluno: alunos){
+            Log.i("id do aluno", String.valueOf(aluno.getId()));
+        }
+
         AlunosAdapter adapter = new AlunosAdapter(this, alunos);
         listaAlunos.setAdapter(adapter);
     }
@@ -107,9 +112,11 @@ public class ListaAlunosActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
         //abre menu de opcoes no item selecionado
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
         //objeto aluno recebe um final pois sendo uma variavel causaria conflito no mesmo objeto aluno em dao.deletar(aluno)
         final Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
 
+        //Intent para configurar opção ligar para contato
         MenuItem itemLigar = menu.add("Ligar");
         itemLigar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -125,35 +132,34 @@ public class ListaAlunosActivity extends AppCompatActivity {
             }
         });
 
-
+        //Intent para configurar envio de SMS
         MenuItem itemSMS = menu.add("Enviar SMS");
         Intent intentSMS = new Intent(Intent.ACTION_VIEW);
         intentSMS.setData(Uri.parse("sms:" + aluno.getTelefone()));
         itemSMS.setIntent(intentSMS);
 
+        //Intent para configurar pesquisa de localização pelo google maps
         MenuItem itemMapa = menu.add("Ver no Mapa");
         Intent intentMapa = new Intent(Intent.ACTION_VIEW);
         intentMapa.setData(Uri.parse("geo:0,0?q=" + aluno.getEndereco()));
         itemMapa.setIntent(intentMapa);
 
+        //Intent para configurar acesso ao site pelo noavegador padrão do aparelho
         final MenuItem itemSite = menu.add("Visitar Site");
         Intent intentSite = new Intent(Intent.ACTION_VIEW);
-
         String site = aluno.getSite();
         if (!site.startsWith("http://")){
             site = "http://" + site;
         }
-
         intentSite.setData(Uri.parse(site));
         itemSite.setIntent(intentSite);
 
 
-
+        //Intent para configurar opção de deletar aluno da agenda
         MenuItem deletar = menu.add("Deletar");
         deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
                 AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
                 dao.deleta(aluno);
                 dao.close();
