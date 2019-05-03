@@ -6,10 +6,18 @@
     android:orientation="vertical"
     >
 
-    <ListView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_lista_alunos"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/lista_alunos" />
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lista_alunos" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
 
     <Button
         android:id="@+id/novo_aluno"

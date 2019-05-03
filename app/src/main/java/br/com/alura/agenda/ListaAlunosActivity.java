@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,13 +21,18 @@ import android.widget.Toast;
 import java.util.List;
 
 import br.com.alura.agenda.adapter.AlunosAdapter;
-import br.com.alura.agenda.converter.AlunoConverter;
 import br.com.alura.agenda.dao.AlunoDAO;
 import br.com.alura.agenda.modelo.Aluno;
+import br.com.alura.agenda.retrofit.RetrofitInicializador;
+import br.com.alura.dto.AlunoSync;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
     private ListView listaAlunos;
+    private SwipeRefreshLayout swipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,15 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
 
         listaAlunos = (ListView) findViewById(R.id.lista_alunos);
+        swipe = findViewById(R.id.swipe_lista_alunos);
+        
+        swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                buscaAlunos();
+            }
+        });
+
         listaAlunos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> lista, View item, int position, long id) {
@@ -57,6 +72,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         });
 
         registerForContextMenu(listaAlunos);
+        buscaAlunos();
     }
 
     @Override// Menu webservice
@@ -104,7 +120,32 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
         carregaLista();
+
+    }
+
+    private void buscaAlunos() {
+        Call<AlunoSync> call = new RetrofitInicializador().getAlunoService().lista();
+
+        call.enqueue(new Callback<AlunoSync>() {
+            @Override
+            public void onResponse(Call<AlunoSync> call, Response<AlunoSync> response) {
+                AlunoSync alunoSync = response.body();
+                AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
+                dao.sincroniza(alunoSync.getAlunos());
+                dao.close();
+                carregaLista();
+                swipe.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<AlunoSync> call, Throwable t) {
+                Log.e("on Failure chamado", t.getMessage());
+                swipe.setRefreshing(false);
+
+            }
+        });
     }
 
     //menus de clique longo
@@ -160,11 +201,25 @@ public class ListaAlunosActivity extends AppCompatActivity {
         deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener(){
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
-                dao.deleta(aluno);
-                dao.close();
+                Call<Void> call = new RetrofitInicializador().getAlunoService().deleta(aluno.getId());
+                call.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
+                        dao.deleta(aluno);
+                        dao.close();
+                        carregaLista();
+                    }
 
-                carregaLista();
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(ListaAlunosActivity.this, "Não foi possivel deletar",Toast.LENGTH_SHORT);
+                    }
+                });
+
+
+
+
                 return false;
             }
         });
