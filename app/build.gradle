@@ -44,8 +44,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.14.1'
     implementation 'com.google.firebase:firebase-messaging:17.6.0'
     implementation 'com.google.firebase:firebase-core:16.0.7'
-
-
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

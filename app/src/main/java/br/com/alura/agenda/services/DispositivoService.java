@@ -7,5 +7,5 @@ import retrofit2.http.POST;
 public interface DispositivoService {
 
     @POST("firebase/dispositivo")
-    Call<Void> enviarToken(@Header("token") String token);
+    Call<Void> enviaToken(@Header("token") String token);
 }

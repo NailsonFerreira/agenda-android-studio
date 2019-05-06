@@ -19,7 +19,7 @@ public class AgendaInstanceIDService extends FirebaseMessagingService {
     }
 
     private void enviaTokenParaServidor(final String token) {
-        Call<Void> call = new RetrofitInicializador().getDispositivoService().enviarToken(token);
+        Call<Void> call = new RetrofitInicializador().getDispositivoService().enviaToken(token);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
