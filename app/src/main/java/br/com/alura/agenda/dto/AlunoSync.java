@@ -1,4 +1,4 @@
-package br.com.alura.dto;
+package br.com.alura.agenda.dto;
 
 import java.util.List;
 

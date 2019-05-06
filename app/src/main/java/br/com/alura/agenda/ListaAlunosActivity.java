@@ -24,7 +24,7 @@ import br.com.alura.agenda.adapter.AlunosAdapter;
 import br.com.alura.agenda.dao.AlunoDAO;
 import br.com.alura.agenda.modelo.Aluno;
 import br.com.alura.agenda.retrofit.RetrofitInicializador;
-import br.com.alura.dto.AlunoSync;
+import br.com.alura.agenda.dto.AlunoSync;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

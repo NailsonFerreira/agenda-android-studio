@@ -1,9 +1,7 @@
 package br.com.alura.agenda.services;
 
-import java.util.List;
-
 import br.com.alura.agenda.modelo.Aluno;
-import br.com.alura.dto.AlunoSync;
+import br.com.alura.agenda.dto.AlunoSync;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
