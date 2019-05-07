@@ -31,4 +31,8 @@ public class AlunoPreferences {
         return preferences.getString(VERSAO_DO_DADO, "");
 
     }
+
+    public boolean temVersao() {
+        return !getVersao().isEmpty();
+    }
 }

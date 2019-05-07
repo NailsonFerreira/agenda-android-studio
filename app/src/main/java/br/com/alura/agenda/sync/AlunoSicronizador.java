@@ -1,6 +1,7 @@
 package br.com.alura.agenda.sync;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -18,26 +19,46 @@ import retrofit2.Response;
 public class AlunoSicronizador {
     private final Context context;
     private EventBus bus = EventBus.getDefault();
+    private AlunoPreferences preferences;
 
     public AlunoSicronizador(Context context) {
         this.context = context;
+        preferences = new AlunoPreferences(context);
     }
 
-    public void buscaAlunos() {
+    public void buscaTodos(){
+        if(preferences.temVersao()){
+            buscaNovos();
+        } else {
+            buscaAlunos();
+        }
+    }
+
+    private void buscaNovos() {
+        String versao = preferences.getVersao();
+        Call<AlunoSync> call = new RetrofitInicializador().getAlunoService().novos(versao);
+        call.enqueue(buscaAlunoCallBack());
+    }
+
+    private void buscaAlunos() {
         Call<AlunoSync> call = new RetrofitInicializador().getAlunoService().lista();
 
-        call.enqueue(new Callback<AlunoSync>() {
+        call.enqueue(buscaAlunoCallBack());
+    }
+
+    @NonNull
+    private Callback<AlunoSync> buscaAlunoCallBack() {
+        return new Callback<AlunoSync>() {
             @Override
             public void onResponse(Call<AlunoSync> call, Response<AlunoSync> response) {
                 AlunoSync alunoSync = response.body();
                 String versao = alunoSync.getMomentoDaUltimaModificacao();
-                AlunoPreferences preferences = new AlunoPreferences(context);
                 preferences.salvaVersao(versao);
                 AlunoDAO dao = new AlunoDAO(context);
                 dao.sincroniza(alunoSync.getAlunos());
                 dao.close();
 
-                Log.i("versao", preferences.getVersao());
+                Log.i("versao***********", preferences.getVersao());
                 bus.post(new AtualizaListaAlunoEvent());
             }
 
@@ -46,6 +67,6 @@ public class AlunoSicronizador {
                 Log.e("on Failure chamado", t.getMessage());
                 bus.post(new AtualizaListaAlunoEvent());
             }
-        });
+        };
     }
 }

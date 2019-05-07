@@ -54,7 +54,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                sicronizador.buscaAlunos();
+                sicronizador.buscaTodos();
             }
         });
 
@@ -80,7 +80,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         });
 
         registerForContextMenu(listaAlunos);
-        sicronizador.buscaAlunos();
+        sicronizador.buscaTodos();
     }
 
     @Override// Menu webservice
@@ -136,11 +136,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
         carregaLista();
 
-    }
-
-    private void buscaAlunos() {
-
-        sicronizador.buscaAlunos();
     }
 
     //menus de clique longo
