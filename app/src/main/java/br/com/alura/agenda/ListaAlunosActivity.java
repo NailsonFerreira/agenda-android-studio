@@ -29,13 +29,14 @@ import br.com.alura.agenda.dao.AlunoDAO;
 import br.com.alura.agenda.event.AtualizaListaAlunoEvent;
 import br.com.alura.agenda.modelo.Aluno;
 import br.com.alura.agenda.retrofit.RetrofitInicializador;
-import br.com.alura.agenda.dto.AlunoSync;
+import br.com.alura.agenda.sync.AlunoSicronizador;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ListaAlunosActivity extends AppCompatActivity {
 
+    private final AlunoSicronizador sicronizador = new AlunoSicronizador(this);
     private ListView listaAlunos;
     private SwipeRefreshLayout swipe;
 
@@ -53,7 +54,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                buscaAlunos();
+                sicronizador.buscaAlunos();
             }
         });
 
@@ -79,7 +80,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         });
 
         registerForContextMenu(listaAlunos);
-        buscaAlunos();
+        sicronizador.buscaAlunos();
     }
 
     @Override// Menu webservice
@@ -125,6 +126,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
     }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void atualizaListaAlunoEvent(AtualizaListaAlunoEvent event){
+        if(swipe.isRefreshing()) swipe.setRefreshing(false);
         carregaLista();
     }
 
@@ -137,26 +139,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
     }
 
     private void buscaAlunos() {
-        Call<AlunoSync> call = new RetrofitInicializador().getAlunoService().lista();
 
-        call.enqueue(new Callback<AlunoSync>() {
-            @Override
-            public void onResponse(Call<AlunoSync> call, Response<AlunoSync> response) {
-                AlunoSync alunoSync = response.body();
-                AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
-                dao.sincroniza(alunoSync.getAlunos());
-                dao.close();
-                carregaLista();
-                swipe.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<AlunoSync> call, Throwable t) {
-                Log.e("on Failure chamado", t.getMessage());
-                swipe.setRefreshing(false);
-
-            }
-        });
+        sicronizador.buscaAlunos();
     }
 
     //menus de clique longo
